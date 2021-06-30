@@ -2,6 +2,10 @@ import { myClone, creatId } from '../utils'
 import { eventBus } from '../composable/core'
 import { basicSpeed, basicPosition, entityCanvasHandler } from './global'
 
+// Images...
+import pipe_down from '../assets/imgs/pipe_down.png'
+import pipe_up from '../assets/imgs/pipe_up.png'
+
 interface obstacleSpawnPosition extends basicPosition {
   height: number
 }
@@ -23,8 +27,6 @@ type obstacleConf = {
   clearance: number
   // 基本速度配置
   speed: basicSpeed
-  // 颜色配置
-  color: string
 }
 
 // 障碍物基本类型
@@ -42,6 +44,7 @@ export class Obstacle implements entityCanvasHandler {
   public hasNext!: boolean
   public canvas!: HTMLCanvasElement
   public ctx!: CanvasRenderingContext2D
+  obstacleImg!: HTMLImageElement
 
   constructor(
     id: string,
@@ -67,12 +70,14 @@ export class Obstacle implements entityCanvasHandler {
     this.hasNext = true
     this.ctx = el.getContext('2d')!
     this.canvas = el
+    this.obstacleImg = new Image()
+    this.obstacleImg.src = placePosition === 'top' ? pipe_down : pipe_up
   }
 
   public draw() {
-    this.ctx.fillStyle = this.conf.color
     this.ctx.beginPath()
-    this.ctx.fillRect(
+    this.ctx.drawImage(
+      this.obstacleImg,
       this.currentPosition.X,
       this.currentPosition.Y,
       this.conf.width,
@@ -117,7 +122,6 @@ class completeObstacle {
         VX: 100,
         VY: 0,
       },
-      color: '#27ae60',
     }
     this.randomPosition = this.createRandomPosition()
     this.id = creatId()

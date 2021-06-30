@@ -1,5 +1,7 @@
 import { basicPosition, basicSpeed, entityCanvasHandler } from './global'
 import { myClone } from '../utils'
+
+// Images...
 import bird0_0 from '../assets/imgs/bird0_0.png'
 import bird0_1 from '../assets/imgs/bird0_1.png'
 import bird0_2 from '../assets/imgs/bird0_2.png'

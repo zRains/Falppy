@@ -4,6 +4,10 @@ import { Obstacle, ObstacleFactory } from '../types/obstacle'
 import { EventBus } from '../types/eventBus'
 import { creatId } from '../utils'
 
+// Images...
+import bg_night from '../assets/imgs/bg_night.png'
+import land from '../assets/imgs/land.png'
+
 export const eventBus = EventBus.getInstance()
 type gameStatus = 'padding' | 'running' | 'endding'
 const gameSetting = {
@@ -21,6 +25,7 @@ class GameBoard {
   public obstacles!: Map<string, Obstacle[]>
   public startTime: number | undefined
   public isCounting!: boolean
+  public bgImge!: HTMLImageElement
 
   constructor(
     el: HTMLCanvasElement,
@@ -36,6 +41,8 @@ class GameBoard {
     this.obstacles = new Map()
     this.startTime
     this.status = 'running'
+    this.bgImge = new Image()
+    this.bgImge.src = bg_night
   }
 
   public addBirdEntity(birdEntity: { id: string; bird: Bird }) {
@@ -78,16 +85,26 @@ class GameBoard {
     if (!this.startTime) this.startTime = now
     let seconds = (now - this.startTime) / 1000
     this.startTime = now
+    // 绘画实体更新
     for (let i = 0; i < allBirdCanvasEntities.length; i++)
       allBirdCanvasEntities[i].update(seconds)
     for (let i = 0; i < allObstacleCanvasEntities.length; i++)
       allObstacleCanvasEntities[i].update(seconds)
     this.ctx.clearRect(0, 0, this.boardWidth, this.boardHeight)
+
+    // 碰撞检测
     this.clashCheck()
+
+    // 背景绘制
+    // this.ctx.drawImage(this.bgImge, 0, 0, this.boardWidth / 4, this.boardHeight)
+
+    // 绘画实体
     for (let i = 0; i < allObstacleCanvasEntities.length; i++)
       allObstacleCanvasEntities[i].draw()
     for (let i = 0; i < allBirdCanvasEntities.length; i++)
       allBirdCanvasEntities[i].draw()
+
+    // 更新Canvas
     if (this.status === 'running')
       window.requestAnimationFrame(this.process.bind(this))
   }
@@ -111,7 +128,6 @@ class GameBoard {
         myBirdCurrentY >=
           this.boardHeight - myBirdSize - allObstacleEntities[1].height
       ) {
-        allObstacleEntities[0].conf.color = '#e74c3c'
         this.status = 'endding'
       }
     } else if (
