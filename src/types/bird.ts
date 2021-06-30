@@ -58,7 +58,7 @@ export class Bird implements entityCanvasHandler {
     this.currentPosition = myClone(spawnPosition)
     this.ctx = ctx
     this.birdImg = new Image()
-    this.birdImg.src = bird0_0
+    this.birdImg.src = bird0_1
   }
 
   public upper() {
@@ -78,13 +78,6 @@ export class Bird implements entityCanvasHandler {
       this.conf.size,
       this.conf.size
     )
-    // this.ctx.arc(
-    //   this.currentPosition.X,
-    //   this.currentPosition.Y,
-    //   this.conf.size,
-    //   0,
-    //   2 * Math.PI
-    // )
     this.ctx.fill()
     this.ctx.closePath
   }
@@ -102,9 +95,11 @@ export class Bird implements entityCanvasHandler {
         this.currentPosition.Y += this.currentSpeed.VY * seconds
       } else if (this.direction === 'up') {
         this.currentSpeed.VY -= 15
+        this.birdImg.src = bird0_2
         if (this.currentSpeed.VY <= 0) {
           this.currentSpeed.VY = 0
           this.direction = 'recovery'
+          this.birdImg.src = bird0_0
         }
         this.currentPosition.Y -= this.currentSpeed.VY * seconds
       }
