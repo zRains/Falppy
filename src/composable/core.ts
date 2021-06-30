@@ -159,7 +159,7 @@ function Flappy(el: HTMLCanvasElement) {
   const myBird = birdFactory.createBird(
     creatId(),
     {
-      size: 70,
+      size: 20,
       speed: {
         VX: 0,
         VY: 400,
