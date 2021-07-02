@@ -26,6 +26,7 @@ class GameBoard {
   public startTime: number | undefined
   public isCounting!: boolean
   public bgImge!: HTMLImageElement
+  public score!: number
 
   constructor(
     el: HTMLCanvasElement,
@@ -43,6 +44,7 @@ class GameBoard {
     this.status = 'running'
     this.bgImge = new Image()
     this.bgImge.src = bg_night
+    this.score = 0
   }
 
   public addBirdEntity(birdEntity: { id: string; bird: Bird }) {
@@ -103,7 +105,9 @@ class GameBoard {
       allObstacleCanvasEntities[i].draw()
     for (let i = 0; i < allBirdCanvasEntities.length; i++)
       allBirdCanvasEntities[i].draw()
-
+    this.ctx.font = '18px bold 黑体'
+    this.status === 'running' &&
+      this.ctx.fillText('当前分数：' + this.score, 50, 50)
     // 更新Canvas
     if (this.status === 'running')
       window.requestAnimationFrame(this.process.bind(this))
@@ -117,18 +121,21 @@ class GameBoard {
     const myBirdSize = myBird.conf.size
     // 开始判定
     if (
-      myBirdCurrentX >= allObstacleEntities[0].currentPosition.X - myBirdSize &&
-      myBirdCurrentX <=
+      myBirdCurrentX - 20 >=
+        allObstacleEntities[0].currentPosition.X - myBirdSize &&
+      myBirdCurrentX + 20 <=
         allObstacleEntities[0].currentPosition.X +
           allObstacleEntities[0].conf.width
     ) {
       this.isCounting = true
+      // TODO...
       if (
-        myBirdCurrentY <= allObstacleEntities[0].height ||
-        myBirdCurrentY >=
+        myBirdCurrentY + 20 <= allObstacleEntities[0].height ||
+        myBirdCurrentY - 20 >=
           this.boardHeight - myBirdSize - allObstacleEntities[1].height
       ) {
         this.status = 'endding'
+        this.score = 0
       }
     } else if (
       myBirdCurrentX >
@@ -136,7 +143,7 @@ class GameBoard {
         allObstacleEntities[0].conf.width
     ) {
       if (this.isCounting) {
-        console.log('+1')
+        this.score++
         this.isCounting = false
       }
     }
@@ -159,7 +166,7 @@ function Flappy(el: HTMLCanvasElement) {
   const myBird = birdFactory.createBird(
     creatId(),
     {
-      size: 20,
+      size: 80,
       speed: {
         VX: 0,
         VY: 400,

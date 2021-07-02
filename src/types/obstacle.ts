@@ -93,7 +93,7 @@ export class Obstacle implements entityCanvasHandler {
       eventBus.emit('removeObstacle', this.id)
     }
     if (
-      this.currentPosition.X <= this.canvas.width - 3 * this.conf.width &&
+      this.currentPosition.X <= this.canvas.width - 4 * this.conf.width &&
       this.hasNext
     ) {
       eventBus.emit('createNextObstacle', this.id)
@@ -117,7 +117,7 @@ class completeObstacle {
     this.canvas = el
     this.conf = {
       width: 100,
-      clearance: 150,
+      clearance: 200,
       speed: {
         VX: 100,
         VY: 0,
